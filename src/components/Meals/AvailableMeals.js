@@ -1,4 +1,5 @@
 import styles from "./AvailableMeals.module.css";
+import MealItem from "./MealItem";
 
 const AvailableMeals = () => {
   const DUMMY_MEALS = [
@@ -31,7 +32,7 @@ const AvailableMeals = () => {
     <section className={styles.meals}>
       <ul>
         {DUMMY_MEALS.map((meal) => {
-          return <li key={meal.id}>{meal.name}</li>;
+          return <MealItem key={meal.id} meal={meal}></MealItem>;
         })}
       </ul>
     </section>
