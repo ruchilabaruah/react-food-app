@@ -1,44 +1,53 @@
+import { useEffect, useState } from "react";
+import Card from "../UI/Card";
 import styles from "./AvailableMeals.module.css";
 import MealItem from "./MealItem";
 
 const AvailableMeals = () => {
-  const DUMMY_MEALS = [
-    {
-      id: "m1",
-      name: "Sushi",
-      description: "Finest fish and veggies",
-      price: 22.99,
-      quantity: 0
-    },
-    {
-      id: "m2",
-      name: "Schnitzel",
-      description: "A german specialty!",
-      price: 16.5,
-      quantity: 0
-    },
-    {
-      id: "m3",
-      name: "Barbecue Burger",
-      description: "American, raw, meaty",
-      price: 12.99,
-      quantity: 0
-    },
-    {
-      id: "m4",
-      name: "Green Bowl",
-      description: "Healthy...and green...",
-      price: 18.99,
-      quantity: 0
-    },
-  ];
+  const [availableMeals, setAvailableMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    const fetchMeals = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(
+          "https://react-starter-4e160-default-rtdb.europe-west1.firebasedatabase.app/meals.json"
+        );
+        if (!response.ok) {
+          throw new Error(response.error);
+        }
+        const meals = await response.json();
+        let loadedMeals = [];
+        for (let i in meals) {
+          const meal = {
+            ...meals[i],
+            key: i,
+          };
+          loadedMeals = [...loadedMeals, meal];
+        }
+        console.log(loadedMeals);
+        setAvailableMeals(loadedMeals);
+      } catch (error) {
+        console.log("Something went wrong! ", error);
+      }
+      setIsLoading(false);
+    };
+    fetchMeals();
+  }, []);
+
+  if (isLoading) {
+    return <p>Loading meals</p>;
+  }
+
   return (
     <section className={styles.meals}>
-      <ul>
-        {DUMMY_MEALS.map((meal) => {
-          return <MealItem key={meal.id} meal={meal}></MealItem>;
-        })}
-      </ul>
+      <Card>
+        <ul>
+          {availableMeals.map((meal) => {
+            return <MealItem key={meal.id} meal={meal}></MealItem>;
+          })}
+        </ul>
+      </Card>
     </section>
   );
 };
