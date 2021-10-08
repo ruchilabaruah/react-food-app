@@ -5,6 +5,8 @@ const Checkout = (props) => {
     event.preventDefault();
   };
 
+  //TODO: Create a custom hook for doing the validations in the form
+
   return (
     <form className={classes.form} onSubmit={confirmHandler}>
       <div className={classes.control}>
